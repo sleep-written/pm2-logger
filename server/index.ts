@@ -1,11 +1,13 @@
 import { PM2 } from '@pm2-logger/utils';
 
 
-const log: string[] = [];
 const pm2 = new PM2();
 const { controller, execute } = pm2.log(
-    1, 
-    chunk => log.push(chunk.toString('utf-8'))
+    2, 
+    chunk => {
+        const message = chunk.toString('utf-8');
+        console.log(message);
+    }
 );
 
 setTimeout(
