@@ -82,8 +82,10 @@ export class PM2 {
             });
 
             process.on('error', err => {
-                error = err;
-                controller.abort();
+                if (!controller.signal.aborted) {
+                    error = err;
+                    controller.abort();
+                }
             });
 
             process.stdout.on('data', async (chunk: Buffer) => {
