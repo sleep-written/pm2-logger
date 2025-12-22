@@ -1,0 +1,7 @@
+{
+    "name": "@pm2-logger/server",
+    "type": "module",
+    "dependencies": {
+        "@pm2-logger/utils": "*"
+    }
+}

@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "strict": true,
+        "target": "es2024",
+        "module": "node20",
+        "moduleResolution": "node16",
+        "verbatimModuleSyntax": true,
+
+        "sourceMap": true
+    },
+    "angularCompilerOptions": {
+        "strictTemplates": true
+    }
+}
