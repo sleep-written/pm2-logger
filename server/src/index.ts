@@ -15,6 +15,11 @@ const { values: { port } } = parseArgs({
 
 const app = express();
 app.use(apiRouting);
-app.listen(parseInt(port), () => {
+const server = app.listen(parseInt(port), () => {
     console.log('ready!');
+});
+
+await new Promise<void>(resolve => {
+    process.once('SIGINT', () => server.close());
+    server.once('close', () => resolve());
 });
