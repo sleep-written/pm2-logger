@@ -3,12 +3,13 @@
     "workspaces": [
         "./client",
         "./server",
-        "./utils"
+        "./utils/*"
     ],
     "dependencies": {
         "turbo": "^2.6.3"
     },
     "devDependencies": {
+        "@bleed-believer/cli": "^0.0.4-alpha.0",
         "@types/node": "^25.0.3"
     }
 }

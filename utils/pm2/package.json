@@ -1,12 +1,12 @@
 {
-    "name": "@pm2-logger/utils",
+    "name": "@pm2-logger/pm2",
     "type": "module",
     "scripts": {
         "test": "node --test \"./**/*.test.ts\""
     },
     "exports": {
         ".": {
-            "import": "./src/index.ts"
+            "import": "./index.ts"
         }
     }
 }

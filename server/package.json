@@ -2,6 +2,12 @@
     "name": "@pm2-logger/server",
     "type": "module",
     "dependencies": {
-        "@pm2-logger/utils": "*"
+        "@bleed-believer/espresso": "^0.0.2-alpha.0",
+        "@pm2-logger/utils": "*",
+        "express": "^5.2.1",
+        "mime": "^4.1.0"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.6"
     }
 }

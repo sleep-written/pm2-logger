@@ -2,6 +2,12 @@
     "extends": "../tsconfig.json",
     "compilerOptions": {
         "noEmit": true,
-        "allowImportingTsExtensions": true
+        "emitDecoratorMetadata": true,
+        "experimentalDecorators": true,
+        "allowImportingTsExtensions": false,
+
+        "outDir": "dist",
+        "rootDir": "src",
+        "sourceMap": true
     }
 }
