@@ -20,8 +20,8 @@ async function resolveStaticPath(path: string): Promise<string> {
     }
 }
 
-export const angularController = express.Router();
-angularController.get('*all', async (req, res) => {
+export const clientController = express.Router();
+clientController.get('*all', async (req, res) => {
     const path = await resolveStaticPath(req.path);
     res.sendFile(path);
 });
