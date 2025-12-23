@@ -1,5 +1,5 @@
 {
-    "name": "@pm2-logger/pm2",
+    "name": "@pm2-logger/utils-pm2",
     "type": "module",
     "scripts": {
         "test": "node --test \"./**/*.test.ts\""
