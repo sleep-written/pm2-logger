@@ -1,12 +1,19 @@
 {
     "name": "@pm2-logger/utils-pm2",
     "type": "module",
-    "scripts": {
-        "test": "node --test \"./**/*.test.ts\""
-    },
     "exports": {
         ".": {
-            "import": "./index.ts"
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
         }
+    },
+    "scripts": {
+        "clean": "rm -rf ./dist",
+        "build:tsc": "tsc -p ./tsconfig.build.json",
+        "build:swc": "bleed build --config ./tsconfig.build.json",
+        "build": "node --run clean && node --run build:swc && node --run build:tsc",
+        "watch:tsc": "tsc -w -p ./tsconfig.build.json",
+        "watch:swc": "bleed build --watch",
+        "watch": "node --run clean && node --run watch:swc & node --run watch:tsc"
     }
 }

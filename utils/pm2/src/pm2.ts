@@ -1,4 +1,4 @@
-import type { PM2Inject, PM2Process, PM2ProcessRaw } from './interfaces/index.ts';
+import type { PM2Inject, PM2Process, PM2ProcessRaw } from './interfaces/index.js';
 import { spawn, spawnSync } from 'node:child_process';
 
 export class PM2 {

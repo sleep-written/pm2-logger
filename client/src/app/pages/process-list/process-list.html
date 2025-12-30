@@ -1,0 +1,7 @@
+<h2>PM2 process list</h2>
+
+<ul>
+    @for (process of this.list(); track process.id) {
+        <li>{{ process.name }}</li>
+    }
+</ul>

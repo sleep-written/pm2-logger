@@ -1,6 +1,6 @@
-import type { PM2Inject, SpawnSyncResponse } from './interfaces/index.ts';
+import type { PM2Inject, SpawnSyncResponse } from './interfaces/index.js';
 
-import { PM2 } from './pm2.ts';
+import { PM2 } from './pm2.js';
 import test from 'node:test';
 
 class Inject implements PM2Inject {

@@ -6,10 +6,17 @@
         "./utils/*"
     ],
     "dependencies": {
-        "turbo": "^2.6.3"
+        "turbo": "^2.7.2"
     },
     "devDependencies": {
         "@bleed-believer/cli": "^0.0.4-alpha.0",
-        "@types/node": "^25.0.3"
+        "@types/node": "^25.0.3",
+        "resolve-tspaths": "^0.8.23"
+    },
+    "packageManager": "npm@11.7.0",
+    "scripts": {
+        "watch": "turbo run watch",
+        "build": "turbo run build",
+        "start": "turbo run build && cd server && node --run start --"
     }
 }

@@ -1,6 +1,6 @@
-import type { ChildProcess, ChildProcessStream, PM2Inject, SpawnSyncResponse } from './interfaces/index.ts';
+import type { ChildProcess, ChildProcessStream, PM2Inject } from './interfaces/index.js';
 
-import { PM2 } from './pm2.ts';
+import { PM2 } from './pm2.js';
 import test from 'node:test';
 
 class EGirlStreamer implements ChildProcessStream {

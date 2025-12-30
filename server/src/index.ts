@@ -1,25 +1,17 @@
-import { parseArgs } from 'node:util';
-import express from 'express';
+import { Mocks } from '@mocks/index.js';
+import { Server } from '@pm2-logger/utils-server';
 
-import { apiRouting } from './api/routing.js';
+import { endpointsRouting } from './endpoints/routing.js';
 
-const { values: { port } } = parseArgs({
-    options: {
-        port: {
-            type: 'string',
-            default: '8080',
-            multiple: false
-        }
-    }
-});
+const mocks = new Mocks();
+mocks.execute();
 
-const app = express();
-app.use(apiRouting);
-const server = app.listen(parseInt(port), () => {
+const app = new Server();
+app.use(endpointsRouting);
+
+const server = app.listen(8080, () => {
     console.log('ready!');
-});
-
-await new Promise<void>(resolve => {
-    process.once('SIGINT', () => server.close());
-    server.once('close', () => resolve());
+    process.once('SIGINT', () => {
+        server.close();
+    });
 });

@@ -3,11 +3,20 @@
     "type": "module",
     "dependencies": {
         "@bleed-believer/espresso": "^0.0.2-alpha.0",
+        "@pm2-logger/utils-injector": "*",
         "@pm2-logger/utils-pm2": "*",
+        "@pm2-logger/utils-server": "*",
         "express": "^5.2.1",
         "mime": "^4.1.0"
     },
     "devDependencies": {
         "@types/express": "^5.0.6"
+    },
+    "scripts": {
+        "clean": "rm -rf ./dist",
+        "build:tsc": "tsc -p ./tsconfig.build.json",
+        "build:swc": "bleed build --config ./tsconfig.build.json",
+        "build": "node --run clean && node --run build:swc && node --run build:tsc",
+        "start": "node ./dist/index.js"
     }
 }
