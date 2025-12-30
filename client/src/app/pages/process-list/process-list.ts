@@ -1,10 +1,21 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
-import { Service } from './service.js';
+
 import { PM2Process } from './pm2-process.js';
+import { Service } from './service.js';
+
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 
 @Component({
   selector: 'app-process-list',
-  imports: [],
+  imports: [
+    MatCardModule,
+    MatListModule,
+    MatButtonModule,
+    MatDividerModule
+  ],
   templateUrl: './process-list.html',
   styleUrl: './process-list.scss',
   changeDetection: ChangeDetectionStrategy.OnPush

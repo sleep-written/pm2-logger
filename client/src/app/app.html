@@ -1,2 +1,19 @@
-<router-outlet>
-</router-outlet>
+<mat-toolbar>
+    <button mat-icon-button
+    type="button"
+    (click)="this.opened.set(!this.opened())">
+        <mat-icon>menu</mat-icon>
+    </button>
+
+    <h1>PM2 Monitor</h1>
+</mat-toolbar>
+
+<mat-sidenav-container (backdropClick)="this.opened.set(!this.opened())">
+    <mat-sidenav [opened]="this.opened()">
+    </mat-sidenav>
+    
+    <mat-sidenav-content>
+        <router-outlet>
+        </router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

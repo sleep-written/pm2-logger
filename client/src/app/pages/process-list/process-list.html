@@ -1,7 +1,17 @@
-<h2>PM2 process list</h2>
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Process list</mat-card-title>
+    </mat-card-header>
 
-<ul>
-    @for (process of this.list(); track process.id) {
-        <li>{{ process.name }}</li>
-    }
-</ul>
+    <mat-card-content>
+        <mat-list>
+            @for (process of this.list(); track process.id) {
+                @if ($index > 0) {
+                    <mat-divider></mat-divider>
+                }
+
+                <mat-list-item>{{ process.name }}</mat-list-item>
+            }
+        </mat-list>
+    </mat-card-content>
+</mat-card>
