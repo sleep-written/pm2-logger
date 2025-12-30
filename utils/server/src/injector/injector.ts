@@ -16,7 +16,7 @@ export class Injector {
     inject<T>(token: Token<T>): T {
         const callback = this.#data.get(token);
         if (!callback) {
-            if (typeof token === 'function' && token.length === 0) {
+            if (typeof token === 'function' && token.length === 1) {
                 return new token();
             }
 
