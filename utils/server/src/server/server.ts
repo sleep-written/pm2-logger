@@ -25,24 +25,4 @@ export class Server {
     static get inject() {
         return Server.#injector.inject.bind(Server.#injector);
     }
-
-    #app: express.Application;
-
-    constructor() {
-        this.#app = express();
-    }
-    
-    get use() {
-        return this.#app.use.bind(this.#app);
-    }
-
-    get listen() {
-        return this.#app.listen.bind(this.#app);
-    }
-
-    addController(target: new() => unknown): Server {
-        const router = Server.router({ controllers: [ target ] });
-        this.#app.use(router);
-        return this;
-    }
 }

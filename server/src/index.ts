@@ -1,7 +1,9 @@
 import { parseArgs, styleText } from 'node:util';
-import { Server } from '@pm2-logger/utils-server';
+import express from 'express';
+import http from 'http';
 
 import { endpointsRouting } from './endpoints/routing.js';
+import { eventsSocket } from './events/socket.js';
 import { Mocks } from './mocks/index.js';
 
 const { values } = parseArgs({
@@ -24,14 +26,18 @@ const { values } = parseArgs({
 const mocks = new Mocks(values.mocks);
 mocks.execute();
 
-const app = new Server();
+const app = express();
 app.use(endpointsRouting);
 
-const server = app.listen(values.port, () => {
+const server = http.createServer(app);
+eventsSocket.use(server);
+
+server.listen(8080, () => {
     const styledPort = styleText('blueBright', values.port);
     console.log(`The server is listening on port ${styledPort}.-`);
+});
 
-    process.once('SIGINT', () => {
-        server.close();
-    });
+process.once('SIGINT', () => {
+    server.listening &&
+    server.close();
 });
