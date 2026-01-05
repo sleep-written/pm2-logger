@@ -32,7 +32,7 @@ app.use(endpointsRouting);
 const server = http.createServer(app);
 eventsSocket.use(server);
 
-server.listen(8080, () => {
+server.listen(values.port, () => {
     const styledPort = styleText('blueBright', values.port);
     console.log(`The server is listening on port ${styledPort}.-`);
 });
