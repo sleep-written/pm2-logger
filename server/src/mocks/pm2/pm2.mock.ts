@@ -49,7 +49,7 @@ export class PM2Mock implements PM2Object {
             while (!signal.aborted) {
                 const line = [
                     `${process.name} -> `,
-                    this.#randomBits(16)
+                    this.#randomBits(256)
                 ];
                 
                 const buffer = Buffer.from(line.join(''), 'utf-8');

@@ -1,49 +1,55 @@
 @let selected = this.process();
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>Process list</mat-card-title>
-    </mat-card-header>
 
-    <mat-card-content>
-        <mat-list>
-            @for (process of this.list(); track process.id) {
-                @if ($index > 0) {
-                    <mat-divider></mat-divider>
+<div class="flex-fixed">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Process list</mat-card-title>
+        </mat-card-header>
+
+        <mat-card-content>
+            <mat-list>
+                @for (process of this.list(); track process.id) {
+                    @if ($index > 0) {
+                        <mat-divider></mat-divider>
+                    }
+
+                    <mat-list-item>
+                        <div class="mat-list-item-content">
+                            <button mat-icon-button
+                            (click)="this.onProcessClick(process)">
+                                @if (selected?.id === process.id) {
+                                    <mat-icon>check_box</mat-icon>
+                                } @else {
+                                    <mat-icon>check_box_outline_blank</mat-icon>
+                                }
+                            </button>
+
+                            <span>{{ process.name }}</span>
+                        </div>
+                    </mat-list-item>
                 }
+            </mat-list>
+        </mat-card-content>
+    </mat-card>
+</div>
 
-                <mat-list-item>
-                    <div class="mat-list-item-content">
-                        <button mat-icon-button
-                        (click)="this.onProcessClick(process)">
-                            @if (selected?.id === process.id) {
-                                <mat-icon>check_box</mat-icon>
-                            } @else {
-                                <mat-icon>check_box_outline_blank</mat-icon>
-                            }
-                        </button>
+<div class="flex-variant">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>Event log</mat-card-title>
 
-                        <span>{{ process.name }}</span>
-                    </div>
-                </mat-list-item>
+            @if (selected) {
+                <mat-card-subtitle>{{ selected.name }}</mat-card-subtitle>
             }
-        </mat-list>
-    </mat-card-content>
-</mat-card>
+        </mat-card-header>
 
-<mat-card>
-    <mat-card-header>
-        <mat-card-title>Event log</mat-card-title>
-
-        @if (selected) {
-            <mat-card-subtitle>{{ selected.name }}</mat-card-subtitle>
-        }
-    </mat-card-header>
-
-    <mat-card-content>
-        @if (selected) {
-            <app-event-log [process]="selected" />
-        } @else {
-            <span>Select a process to inspect...</span>
-        }
-    </mat-card-content>
-</mat-card>
+        <mat-card-content>
+            @if (selected) {
+                <app-event-log [process]="selected">
+                </app-event-log>
+            } @else {
+                <span>Select a process to inspect...</span>
+            }
+        </mat-card-content>
+    </mat-card>
+</div>
