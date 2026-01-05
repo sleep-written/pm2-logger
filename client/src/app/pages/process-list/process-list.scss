@@ -1,0 +1,27 @@
+:host {
+    flex: 1;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    padding: .5rem;
+
+    & > mat-card {
+        margin: .5rem;
+    }
+
+    & > mat-card:nth-child(1) {
+        width: 320px;
+    }
+
+    & > mat-card:nth-child(2) {
+        flex: 1;
+    }
+}
+
+mat-list-item::ng-deep .mat-list-item-content {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-items: center;
+}

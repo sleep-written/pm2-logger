@@ -1,3 +1,4 @@
+@let selected = this.process();
 <mat-card>
     <mat-card-header>
         <mat-card-title>Process list</mat-card-title>
@@ -10,8 +11,39 @@
                     <mat-divider></mat-divider>
                 }
 
-                <mat-list-item>{{ process.name }}</mat-list-item>
+                <mat-list-item>
+                    <div class="mat-list-item-content">
+                        <button mat-icon-button
+                        (click)="this.onProcessClick(process)">
+                            @if (selected?.id === process.id) {
+                                <mat-icon>check_box</mat-icon>
+                            } @else {
+                                <mat-icon>check_box_outline_blank</mat-icon>
+                            }
+                        </button>
+
+                        <span>{{ process.name }}</span>
+                    </div>
+                </mat-list-item>
             }
         </mat-list>
+    </mat-card-content>
+</mat-card>
+
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Event log</mat-card-title>
+
+        @if (selected) {
+            <mat-card-subtitle>{{ selected.name }}</mat-card-subtitle>
+        }
+    </mat-card-header>
+
+    <mat-card-content>
+        @if (selected) {
+            <app-event-log [process]="selected" />
+        } @else {
+            <span>Select a process to inspect...</span>
+        }
     </mat-card-content>
 </mat-card>

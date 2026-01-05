@@ -16,3 +16,15 @@
         flex: 1;
     }
 }
+
+mat-sidenav-content {
+    display: flex;
+    
+    & > *::ng-deep {
+        flex: 1;
+    }
+
+    & > router-outlet {
+        display: none;
+    }
+}
