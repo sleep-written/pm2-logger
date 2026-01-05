@@ -1,12 +1,10 @@
-:host {
+mat-card {
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;
     align-items: stretch;
-    width: 100%;
 
-    & > p {
-        white-space: pre;
-        margin: 0;
+    & > mat-card-content {
+        flex: 1;
     }
 }

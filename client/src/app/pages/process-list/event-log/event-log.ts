@@ -1,4 +1,4 @@
-import { Component, effect, input, OnDestroy, signal } from '@angular/core';
+import { Component, effect, ElementRef, inject, input, OnDestroy, signal } from '@angular/core';
 import { PM2Process } from '../pm2-process.js';
 
 @Component({
@@ -9,6 +9,7 @@ import { PM2Process } from '../pm2-process.js';
   styleUrl: './event-log.scss',
 })
 export class EventLog implements OnDestroy {
+  #elementRef = inject<ElementRef<HTMLElement>>(ElementRef, { optional: false });
   process = input.required<PM2Process>();
   socket?: WebSocket;
   lines = signal<string[]>([]);
@@ -40,9 +41,22 @@ export class EventLog implements OnDestroy {
     this.socket = undefined;
   }
 
-  onMessage(e: MessageEvent<string>): void {
+  async onMessage(e: MessageEvent<string>): Promise<void> {
     const lines = this.lines();
     lines.push(e.data);
     this.lines.set(lines.slice(-1000));
+
+    // Ajuste visual
+    await new Promise(r => setTimeout(r, 50));
+    const container = this.#elementRef.nativeElement;
+    const lastChild = container.lastElementChild as HTMLElement;
+    const parent = container.parentElement!;
+    
+    if (container.offsetHeight - lastChild.offsetHeight - (parent.scrollTop + parent.offsetHeight) < 32) {
+      parent.scrollTo({
+        top: container.offsetHeight,
+        behavior: 'smooth'
+      });
+    }
   }
 }

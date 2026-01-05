@@ -16,6 +16,10 @@
 
     & > mat-card:nth-child(2) {
         flex: 1;
+
+        mat-card-content {
+            overflow: auto;
+        }
     }
 }
 
@@ -25,3 +29,4 @@ mat-list-item::ng-deep .mat-list-item-content {
     justify-content: flex-start;
     align-items: center;
 }
+
