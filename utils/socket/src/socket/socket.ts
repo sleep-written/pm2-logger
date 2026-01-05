@@ -1,6 +1,6 @@
 import type { SocketController, SocketControllerOptions } from '../socket-controller/index.js';
-import type { ServerObject, SocketOptions } from './interfaces/index.js';
-import type { Server } from 'node:http';
+import type { IncomingMessage, Server } from 'node:http';
+import type { SocketOptions } from './interfaces/index.js';
 
 import { SocketControllerDecorator } from '../socket-controller/index.js';
 import WebSocket, { WebSocketServer } from 'ws';
@@ -18,33 +18,36 @@ export class Socket {
         this.#options = options;
     }
 
-    #deployTarget(webSocket: WebSocket, target: new() => SocketController): void {
-        class Control extends target {
-            socket = webSocket;
-        }
-
-        const ctrl = new Control();
+    #deployTarget(
+        socket: WebSocket,
+        request: IncomingMessage,
+        target: new() => SocketController
+    ): void {
+        const ctrl = new target();
 
         ctrl.onClose &&
-        webSocket.on('close', ctrl.onClose.bind(ctrl));
+        socket.on('close', ctrl.onClose.bind(ctrl));
 
         ctrl.onError &&
-        webSocket.on('error', ctrl.onError.bind(ctrl));
+        socket.on('error', ctrl.onError.bind(ctrl));
 
         ctrl.onMessage &&
-        webSocket.on('message', ctrl.onMessage.bind(ctrl));
+        socket.on('message', ctrl.onMessage.bind(ctrl));
 
         ctrl.onPing &&
-        webSocket.on('ping', ctrl.onPing.bind(ctrl));
+        socket.on('ping', ctrl.onPing.bind(ctrl));
 
         ctrl.onPong &&
-        webSocket.on('pong', ctrl.onPong.bind(ctrl));
+        socket.on('pong', ctrl.onPong.bind(ctrl));
 
         ctrl.onRedirect &&
-        webSocket.on('redirect', ctrl.onRedirect.bind(ctrl));
+        socket.on('redirect', ctrl.onRedirect.bind(ctrl));
 
         ctrl.onUnexpectedResponse &&
-        webSocket.on('unexpected-response', ctrl.onUnexpectedResponse.bind(ctrl));
+        socket.on('unexpected-response', ctrl.onUnexpectedResponse.bind(ctrl));
+
+        ctrl.onInit &&
+        ctrl.onInit({ socket, request });
     }
 
     use(server: Server, path?: string): void {
@@ -58,10 +61,14 @@ export class Socket {
                     :   [];
                 })
                 .flat()
-                .find(({ options }) => (options.path ?? '/') === (req.url ?? '/')) ?? {};
+                .find(({ options }) => {
+                    const reqUrl = new URL(req.url ?? '/', 'ws://localhost');
+                    const curUrl = new URL(options.path ?? '/', 'ws://localhost');
+                    return reqUrl.pathname === curUrl.pathname;
+                }) ?? {};
 
             if (target) {
-                this.#deployTarget(ws, target);
+                this.#deployTarget(ws, req, target);
             }
         });
     }

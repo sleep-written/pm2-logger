@@ -1,1 +1,3 @@
-<p>event-log works!</p>
+@for (line of this.lines(); track $index) {
+    <p>{{ line }}</p>
+}
