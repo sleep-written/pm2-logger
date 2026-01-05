@@ -1,0 +1,12 @@
+:host {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    overflow: auto;
+
+    & > p {
+        white-space: pre;
+        margin: 0;
+    }
+}

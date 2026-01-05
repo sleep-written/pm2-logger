@@ -28,6 +28,7 @@ export class EventLog implements OnDestroy {
 
     if (this.socket) {
       this.socket.close();
+      this.lines.set([]);
     }
 
     this.socket = new WebSocket(url);
