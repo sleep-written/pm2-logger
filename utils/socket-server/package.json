@@ -1,5 +1,5 @@
 {
-    "name": "@pm2-logger/utils-socket",
+    "name": "@pm2-logger/utils-socket-server",
     "type": "module",
     "exports": {
         ".": {

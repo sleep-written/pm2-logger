@@ -1,18 +1,8 @@
 {
     "$schema": "https://turborepo.com/schema.json",
     "tasks": {
-        "build": {
-            "dependsOn": [ "^build" ],
-            "outputs": [ "dist/**" ],
-            "inputs": [ "src/**" ]
-        },
-        "start": {
-            "dependsOn": [ "^build" ],
-            "outputs": [ "dist/**" ],
-            "inputs": [ "src/**" ]
-        },
         "watch": {
-            "dependsOn": [ "^watch" ],
+            "persistent": true,
             "outputs": [ "dist/**" ],
             "inputs": [ "src/**" ],
             "cache": false

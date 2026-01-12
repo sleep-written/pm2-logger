@@ -28,10 +28,14 @@ export class PM2Mock implements PM2Object {
     }
 
     #randomBits(length: number): string {
-        return Math
-            .round(Math.random() * (2**length))
-            .toString(2)
-            .padStart(length, '0');
+        let out = '';
+        length = Math.abs(length);
+        while (out.length < length) {
+            out += Math.random() < 0.5
+            ?   '0'
+            :   '1';
+        }
+        return out;
     }
 
     log(
@@ -49,7 +53,8 @@ export class PM2Mock implements PM2Object {
             while (!signal.aborted) {
                 const line = [
                     `${process.name} -> `,
-                    this.#randomBits(256)
+                    this.#randomBits(256),
+                    '-pendejo'
                 ];
                 
                 const buffer = Buffer.from(line.join(''), 'utf-8');

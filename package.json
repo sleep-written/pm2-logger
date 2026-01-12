@@ -6,7 +6,7 @@
         "./utils/*"
     ],
     "dependencies": {
-        "turbo": "^2.7.2"
+        "turbo": "^2.7.3"
     },
     "devDependencies": {
         "@bleed-believer/cli": "^0.0.4-alpha.0",

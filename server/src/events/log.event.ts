@@ -1,8 +1,10 @@
-import type { SocketController, SocketControllerContext } from '@pm2-logger/utils-socket';
+import type { SocketController, SocketControllerContext } from '@pm2-logger/utils-socket-server';
+import type { LogEventMessage } from './log.event.message.js';
 
-import { Socket } from '@pm2-logger/utils-socket';
+import { Socket } from '@pm2-logger/utils-socket-server';
 import { Server } from '@pm2-logger/utils-server';
 import { PM2 } from '@pm2-logger/utils-pm2';
+import type WebSocket from 'ws';
 
 @Socket.event({ path: '/pm2/log' })
 export class LogEvent implements SocketController {
@@ -32,9 +34,40 @@ export class LogEvent implements SocketController {
         }
     }
 
+    onMessage(data: WebSocket.RawData): void {
+        try {
+            const text = data.toString('utf-8');
+            const json: LogEventMessage = JSON.parse(text);
+
+            switch (json.name) {
+                case 'heartbeat': {
+                    return this.#sendMessage({
+                        name: 'heartbeat',
+                        value: 'jaja'
+                    });
+                }
+
+                default: {
+                    throw new Error(`jajajjAJ el evento de nombre "${json.name}" no existe, pedazo de pendejo`);
+                }
+            }
+
+        } catch (err: any) {
+            console.error(err);
+        }
+    }
+
+    #sendMessage(message: LogEventMessage): void {
+        const text = JSON.stringify(message);
+        this.context.socket.send(text);
+    }
+
     onStdout(chunk: Buffer): void {
         const line = chunk.toString('utf-8');
-        this.context.socket.send(line);
+        this.#sendMessage({
+            name: 'log-message',
+            value: line
+        });
     }
 
     onClose(): void {
