@@ -21,7 +21,7 @@
 
     <mat-card-content>
         @for (line of lines; track line.id) {
-            <p>{{ line.value }}</p>
+            <p class="{{ line.type }}">{{ line.value }}</p>
         }
 
         @if (lines.length === 0) {

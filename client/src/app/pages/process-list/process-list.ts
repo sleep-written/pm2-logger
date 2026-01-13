@@ -20,7 +20,7 @@ import { Service } from './service.js';
     MatCardModule,
     MatIconModule,
     MatListModule,
-    
+
     ProcessLog,
   ],
   templateUrl: './process-list.html',

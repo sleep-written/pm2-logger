@@ -21,10 +21,6 @@
                 min-width: fit-content;
             }
 
-            & > p {
-                margin: 0;
-            }
-
             & > .empty {
                 opacity: .35;
                 height: 100%;
@@ -52,5 +48,19 @@
                 }
             }
         }
+    }
+}
+
+mat-card-content {
+    & > p {
+        margin: 0;
+    }
+
+    & > p.stdout {
+        color: #507352;
+    }
+
+    & > p.stderr {
+        color: #e73232;
     }
 }

@@ -1,4 +1,4 @@
-import { Component, effect, model, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, effect, ElementRef, inject, input, model, OnDestroy, OnInit, signal } from '@angular/core';
 import { Socket, SocketMessageEvent, SocketStatus } from '@pm2-logger/utils-socket-client';
 
 import { MatCardModule } from '@angular/material/card';
@@ -24,10 +24,16 @@ export class ProcessLog implements OnInit, OnDestroy {
   connecting = signal(false);
 
   prevProcess?: PM2Process;
+  maxLines = input(1000);
   process = model<PM2Process>();
   socket = new Socket();
-  lines = signal<{ id: string; value: string; }[]>([]);
+  lines = signal<{
+    id: string;
+    type: 'stdout' | 'stderr';
+    value: string;
+  }[]>([]);
 
+  #elementRef = inject<ElementRef<HTMLElement>>(ElementRef);
   #heartbeat?: number;
   #effect = effect(this.connect.bind(this));
 
@@ -38,6 +44,20 @@ export class ProcessLog implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.#effect.destroy();
     this.socket.dispose();
+  }
+
+  onContainerScroll(): void {
+    const container = this.#elementRef
+      .nativeElement
+      .querySelector<HTMLElement>('mat-card-content')!;
+
+    const lastChild = this.#elementRef
+      .nativeElement
+      .querySelector<HTMLElement>('mat-card-content > p:last-child')!;
+
+    if (lastChild) {
+      const scrollBottom = container.scrollHeight - (Math.trunc(container.scrollTop) + container.clientHeight)
+    }
   }
 
   updateHeartbeat(): void {
@@ -105,21 +125,46 @@ export class ProcessLog implements OnInit, OnDestroy {
     }
   }
 
-  #generateId(): string {
-    return `${this.process()?.id}::` + Array
+  async #onStandardTerminalMessage(
+    type: 'stdout' | 'stderr',
+    value: string
+  ): Promise<void> {
+    // Update list items
+    const lines = this.lines();
+    const id = `${this.process()?.id}[${type}]::` + Array
       .from(window.crypto.getRandomValues(new Uint8Array(4)))
       .map(x => x.toString(16))
       .join('-');
+
+    lines.push({ id, type, value });
+    this.lines.set(lines.slice(this.maxLines() * -1));
+
+    // Move scroll
+    await new Promise(r => setTimeout(r, 50));
+    const container = this.#elementRef
+      .nativeElement
+      .querySelector<HTMLElement>('mat-card-content')!;
+
+    const lastChild1 = this.#elementRef
+      .nativeElement
+      .querySelector<HTMLElement>('mat-card-content > p:nth-last-child(1)');
+
+    const lastChild2 = this.#elementRef
+      .nativeElement
+      .querySelector<HTMLElement>('mat-card-content > p:nth-last-child(2)');
+
+    if (lastChild1 && lastChild2) {
+      const scrollBottom = container.scrollHeight - (Math.trunc(container.scrollTop) + container.clientHeight)
+      if (scrollBottom < (lastChild1.clientHeight + lastChild2.clientHeight)) {
+        container.scrollTo({
+          top: container.scrollHeight - container.clientHeight,
+          behavior: 'smooth'
+        });
+      }
+    }
   }
 
-  onStdout(value: string): void {
-    const id = this.#generateId();
-    const lines = this.lines();
-    lines.push({ id, value });
-    this.lines.set(lines.slice(-1000));
-  }
-
-  onSocketMessage(e: SocketMessageEvent<any>): void {
+  onSocketMessage(e: SocketMessageEvent<any>): void | Promise<void> {
     const json = JSON.parse(e.data) as { name: string; value: any; };
     switch (json.name) {
       case 'heartbeat': {
@@ -127,7 +172,11 @@ export class ProcessLog implements OnInit, OnDestroy {
       }
 
       case 'stdout': {
-        return this.onStdout(json.value);
+        return this.#onStandardTerminalMessage('stdout', json.value);
+      }
+
+      case 'stderr': {
+        return this.#onStandardTerminalMessage('stderr', json.value);
       }
     }
   }

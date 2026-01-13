@@ -24,7 +24,8 @@ export class LogEvent implements SocketController {
 
             const { controller, execute } = this.pm2.log(
                 processId,
-                this.onStdout.bind(this)
+                this.onStdout.bind(this),
+                this.onStderr.bind(this)
             );
 
             this.controller = controller;
@@ -42,6 +43,13 @@ export class LogEvent implements SocketController {
     onStdout(chunk: Buffer): void {
         this.#sendMessage(
             'stdout',
+            chunk.toString('utf-8')
+        );
+    }
+
+    onStderr(chunk: Buffer): void {
+        this.#sendMessage(
+            'stderr',
             chunk.toString('utf-8')
         );
     }
