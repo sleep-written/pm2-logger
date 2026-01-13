@@ -1,6 +1,8 @@
 import { Component, effect, model, OnDestroy, OnInit, signal } from '@angular/core';
 import { Socket, SocketMessageEvent, SocketStatus } from '@pm2-logger/utils-socket-client';
+
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 import { FloatingLabel } from './floating-label/index.js';
 import { PM2Process } from '../pm2-process.js';
@@ -10,6 +12,8 @@ import { PM2Process } from '../pm2-process.js';
   standalone: true,
   imports: [
     MatCardModule,
+    MatIconModule,
+
     FloatingLabel
 ],
   templateUrl: './process-log.html',

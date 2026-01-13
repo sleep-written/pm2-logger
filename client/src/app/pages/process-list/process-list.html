@@ -16,7 +16,11 @@
                     <mat-list-item>
                         <div class="mat-list-item-content">
                             <button mat-icon-button
-                            (click)="this.onProcessClick(process)">
+                            (click)="this.onProcessClick(process)"
+                            [disabled]="(
+                                processLog.connecting() ||
+                                processLog.reconnecting()
+                            )">
                                 @if (selected?.id === process.id) {
                                     <mat-icon>check_box</mat-icon>
                                 } @else {
@@ -33,6 +37,6 @@
     </mat-card>
 </div>
 
-<app-process-log
+<app-process-log #processLog
 [process]="selected">
 </app-process-log>

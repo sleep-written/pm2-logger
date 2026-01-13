@@ -1,3 +1,4 @@
+@let lines = this.lines();
 @let selected = this.process();
 @let connecting = this.connecting();
 @let reconnecting = this.reconnecting();
@@ -13,12 +14,27 @@
         <mat-card-title>Event log</mat-card-title>
         @if (selected) {
             <mat-card-subtitle>{{ selected.name }}</mat-card-subtitle>
+        } @else {
+            <mat-card-subtitle>Select a process to inspect</mat-card-subtitle>
         }
     </mat-card-header>
 
     <mat-card-content>
-        @for (line of this.lines(); track line.id) {
+        @for (line of lines; track line.id) {
             <p>{{ line.value }}</p>
+        }
+
+        @if (lines.length === 0) {
+            <div class="empty">
+
+                @if (connecting || reconnecting) {
+                    <mat-icon class="rotate">hourglass_empty</mat-icon>
+                    <p>Loading</p>
+                } @else {
+                    <mat-icon>list_alt</mat-icon>
+                    <p>Select a process to inspect</p>
+                }
+            </div>
         }
     </mat-card-content>
 </mat-card>
