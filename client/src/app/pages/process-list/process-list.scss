@@ -1,5 +1,8 @@
 :host {
+    padding: .5rem;
     max-width: 100dvw;
+    box-sizing: border-box;
+
     flex: 1;
     display: flex;
     flex-flow: row nowrap;
@@ -15,7 +18,7 @@
         width: 320px;
     }
     
-    & > .flex-variant {
+    & > app-process-log {
         flex: 1;
         overflow: hidden;
     }

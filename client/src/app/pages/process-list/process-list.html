@@ -33,23 +33,6 @@
     </mat-card>
 </div>
 
-<div class="flex-variant">
-    <mat-card>
-        <mat-card-header>
-            <mat-card-title>Event log</mat-card-title>
-
-            @if (selected) {
-                <mat-card-subtitle>{{ selected.name }}</mat-card-subtitle>
-            }
-        </mat-card-header>
-
-        <mat-card-content>
-            @if (selected) {
-                <app-event-log [process]="selected">
-                </app-event-log>
-            } @else {
-                <span>Select a process to inspect...</span>
-            }
-        </mat-card-content>
-    </mat-card>
-</div>
+<app-process-log
+[process]="selected">
+</app-process-log>

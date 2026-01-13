@@ -1,10 +1,10 @@
 import type { SocketController, SocketControllerContext } from '@pm2-logger/utils-socket-server';
 import type { LogEventMessage } from './log.event.message.js';
+import type WebSocket from 'ws';
 
 import { Socket } from '@pm2-logger/utils-socket-server';
 import { Server } from '@pm2-logger/utils-server';
 import { PM2 } from '@pm2-logger/utils-pm2';
-import type WebSocket from 'ws';
 
 @Socket.event({ path: '/pm2/log' })
 export class LogEvent implements SocketController {
@@ -34,6 +34,18 @@ export class LogEvent implements SocketController {
         }
     }
 
+    #sendMessage(name: string, value?: any): void {
+        const text = JSON.stringify({ name, value });
+        this.context.socket.send(text);
+    }
+
+    onStdout(chunk: Buffer): void {
+        this.#sendMessage(
+            'stdout',
+            chunk.toString('utf-8')
+        );
+    }
+
     onMessage(data: WebSocket.RawData): void {
         try {
             const text = data.toString('utf-8');
@@ -41,10 +53,7 @@ export class LogEvent implements SocketController {
 
             switch (json.name) {
                 case 'heartbeat': {
-                    return this.#sendMessage({
-                        name: 'heartbeat',
-                        value: 'jaja'
-                    });
+                    return this.#sendMessage('heartbeat');
                 }
 
                 default: {
@@ -55,19 +64,6 @@ export class LogEvent implements SocketController {
         } catch (err: any) {
             console.error(err);
         }
-    }
-
-    #sendMessage(message: LogEventMessage): void {
-        const text = JSON.stringify(message);
-        this.context.socket.send(text);
-    }
-
-    onStdout(chunk: Buffer): void {
-        const line = chunk.toString('utf-8');
-        this.#sendMessage({
-            name: 'log-message',
-            value: line
-        });
     }
 
     onClose(): void {

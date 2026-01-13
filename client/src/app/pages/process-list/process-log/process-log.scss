@@ -1,0 +1,29 @@
+@use '@angular/material';
+
+:host {
+    position: relative;
+    padding: .5rem;
+
+    & > app-floating-label {
+        z-index: 5;
+    }
+
+    & > mat-card {
+        z-index: 0;
+        width: 100%;
+        height: 100%;
+
+        mat-card-content {
+            overflow: auto;
+            white-space: pre;
+
+            & > * {
+                min-width: fit-content;
+            }
+
+            & > p {
+                margin: 0;
+            }
+        }
+    }
+}

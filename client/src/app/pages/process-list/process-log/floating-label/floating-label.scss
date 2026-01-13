@@ -1,0 +1,14 @@
+:host {
+    position: absolute;
+    top: 1.5rem;
+    right: .5rem;
+
+    display: flex;
+    flex-flow: row nowrap;
+    opacity: 0.5;
+
+    & > span.dots {
+        width: 2rem;
+        text-align: left;
+    }
+}

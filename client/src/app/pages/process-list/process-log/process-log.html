@@ -1,0 +1,24 @@
+@let selected = this.process();
+@let connecting = this.connecting();
+@let reconnecting = this.reconnecting();
+
+@if (connecting) {
+    <app-floating-label>connecting</app-floating-label>
+} @else if (reconnecting) {
+    <app-floating-label>reconnecting</app-floating-label>
+}
+
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>Event log</mat-card-title>
+        @if (selected) {
+            <mat-card-subtitle>{{ selected.name }}</mat-card-subtitle>
+        }
+    </mat-card-header>
+
+    <mat-card-content>
+        @for (line of this.lines(); track line.id) {
+            <p>{{ line.value }}</p>
+        }
+    </mat-card-content>
+</mat-card>

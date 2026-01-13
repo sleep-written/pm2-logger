@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { EventLog } from './event-log';
+import { FloatingLabel } from './floating-label';
 
-describe('EventLog', () => {
-  let component: EventLog;
-  let fixture: ComponentFixture<EventLog>;
+describe('FloatingLabel', () => {
+  let component: FloatingLabel;
+  let fixture: ComponentFixture<FloatingLabel>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EventLog]
+      imports: [FloatingLabel]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(EventLog);
+    fixture = TestBed.createComponent(FloatingLabel);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

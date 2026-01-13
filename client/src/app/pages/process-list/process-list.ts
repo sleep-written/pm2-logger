@@ -8,8 +8,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 
+import { ProcessLog } from './process-log/process-log.js';
 import { PM2Process } from './pm2-process.js';
-import { EventLog } from './event-log/index.js';
 import { Service } from './service.js';
 
 @Component({
@@ -20,8 +20,8 @@ import { Service } from './service.js';
     MatCardModule,
     MatIconModule,
     MatListModule,
-
-    EventLog,
+    
+    ProcessLog,
   ],
   templateUrl: './process-list.html',
   styleUrl: './process-list.scss',

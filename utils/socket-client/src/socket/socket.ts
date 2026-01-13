@@ -7,11 +7,11 @@ import { TimeoutError } from './timeout.error.js';
 export class Socket<T = any> extends EventEmitter<SocketEventMap<T>> {
     #inject: Required<SocketInject>;
     #socket?: {
-        instance:   WebSocketObject;
-        open:       () => unknown;
-        error:      () => unknown;
-        close:      (e: CloseEvent) => unknown;
-        message:    (e: MessageEvent<T>) => unknown;
+        instance:           WebSocketObject;
+        openCallback:       () => unknown;
+        errorCallback:      () => unknown;
+        closeCallback:      (e: CloseEvent) => unknown;
+        messageCallback:    (e: MessageEvent<T>) => unknown;
     };
 
     #status = SocketStatus.CLOSED;
@@ -52,35 +52,48 @@ export class Socket<T = any> extends EventEmitter<SocketEventMap<T>> {
                 );
 
                 const ws = this.#inject.createSocket(url, options?.protocols);
-                ws.addEventListener('open', () => {
+                const openCallback = () => {
                     clock &&
                     clearTimeout(clock);
+
+                    ws.removeEventListener('error', errorCallback);
                     resolve(ws);
-                }, { once: true });
+                };
+
+                const errorCallback = () => {
+                    clock &&
+                    clearTimeout(clock);
+
+                    ws.removeEventListener('open', openCallback);
+                    reject(new Error(`WebSocket connection to "${url}" failed`));
+                };
+
+                ws.addEventListener('open',  openCallback,  { once: true });
+                ws.addEventListener('error', errorCallback, { once: true });
             });
 
             this.#socket = {
                 instance,
-                message:   e => this.dispatchParallel('message', {
+                messageCallback: e => this.dispatchParallel('message', {
                     data: e.data,
-                    lastEventId: e.lastEventId,
-                    origin: e.origin,
                     ports: e.ports,
-                    source: e.source
+                    source: e.source,
+                    origin: e.origin,
+                    lastEventId: e.lastEventId
                 }),
-                close:     e => this.dispatchParallel('close', {
+                closeCallback:   e => this.dispatchParallel('close', {
                     code: e.code,
                     reason: e.reason,
                     wasClean: e.wasClean
                 }),
-                error:     () => this.dispatchParallel('error'),
-                open:      () => this.dispatchParallel('open')
+                errorCallback:   () => this.dispatchParallel('error'),
+                openCallback:    () => this.dispatchParallel('open')
             };
 
-            instance.addEventListener('message',   this.#socket.message);
-            instance.addEventListener('close',     this.#socket.close);
-            instance.addEventListener('error',     this.#socket.error);
-            instance.addEventListener('open',      this.#socket.open);
+            instance.addEventListener('message',   this.#socket.messageCallback);
+            instance.addEventListener('close',     this.#socket.closeCallback);
+            instance.addEventListener('error',     this.#socket.errorCallback);
+            instance.addEventListener('open',      this.#socket.openCallback);
             this.#status = SocketStatus.OPEN;
 
         } catch (err) {
@@ -102,6 +115,14 @@ export class Socket<T = any> extends EventEmitter<SocketEventMap<T>> {
             throw new Error(`The socket must be connected before close the connection`);
         }
 
+        const {
+            instance,
+            openCallback,
+            errorCallback,
+            closeCallback,
+            messageCallback,
+        } = this.#socket!;
+
         try {
             this.#status = SocketStatus.CLOSING;
             await new Promise<void>((resolve, reject) => {
@@ -114,28 +135,25 @@ export class Socket<T = any> extends EventEmitter<SocketEventMap<T>> {
                     timeout
                 );
 
-                this.#socket!.instance.close(options?.code, options?.reason);
-                this.#socket!.instance.addEventListener('close', () => {
+                instance.addEventListener('close', () => {
                     clock &&
                     clearTimeout(clock);
                     resolve();
                 }, { once: true });
+                
+                instance.removeEventListener('open',    openCallback);
+                instance.removeEventListener('error',   errorCallback);
+                instance.removeEventListener('close',   closeCallback);
+                instance.removeEventListener('message', messageCallback);
+                instance.close(options?.code, options?.reason);
             });
-    
-            this.#socket.instance.removeEventListener('open',    this.#socket.open);
-            this.#socket.instance.removeEventListener('error',   this.#socket.error);
-            this.#socket.instance.removeEventListener('close',   this.#socket.close);
-            this.#socket.instance.removeEventListener('message', this.#socket.message);
-            this.#status = SocketStatus.CLOSED;
-            this.#socket = undefined;
 
         } catch (err) {
-            if (this.#socket?.instance && this.#socket.instance.readyState !== WebSocket.OPEN) {
-                this.#status = SocketStatus.CLOSED;
-                this.#socket = undefined;
-            }
-
             throw err;
+
+        } finally {
+            this.#status = SocketStatus.CLOSED;
+            this.#socket = undefined;
 
         }
     }
