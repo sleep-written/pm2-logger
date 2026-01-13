@@ -19,6 +19,7 @@ export class ProcessLog implements OnInit, OnDestroy {
   reconnecting = signal(false);
   connecting = signal(false);
 
+  prevProcess?: PM2Process;
   process = model<PM2Process>();
   socket = new Socket();
   lines = signal<{ id: string; value: string; }[]>([]);
@@ -54,19 +55,21 @@ export class ProcessLog implements OnInit, OnDestroy {
   async connect(): Promise<void> {
     const process = this.process();
     if (process) {
-      // Disconnect the current connection
-      if (this.socket.status === SocketStatus.OPEN) {
+      if (this.prevProcess?.id === process.id) {
         this.reconnecting.set(true);
         this.connecting.set(false);
+      } else {
+        this.reconnecting.set(false);
+        this.connecting.set(true);
+        this.lines.set([]);
+      }
+
+      // Disconnect the current connection
+      if (this.socket.status === SocketStatus.OPEN) {
         await this.socket
           .disconnect({ timeout: 1000 })
           .catch(_ => {})
           .then(_ => {});
-
-      } else {
-        this.reconnecting.set(false);
-        this.connecting.set(true);
-
       }
 
       // Initialize connection
@@ -82,14 +85,24 @@ export class ProcessLog implements OnInit, OnDestroy {
           .then(_ => {});
       }
 
+      this.prevProcess = process;
       this.reconnecting.set(false);
       this.connecting.set(false);
       this.updateHeartbeat();
+    } else {
+      // Disconnect the current connection
+      if (this.socket.status === SocketStatus.OPEN) {
+        this.lines.set([]);
+        await this.socket
+          .disconnect({ timeout: 1000 })
+          .catch(_ => {})
+          .then(_ => {});
+      }
     }
   }
 
   #generateId(): string {
-    return `${this.process()?.id}::` +  Array
+    return `${this.process()?.id}::` + Array
       .from(window.crypto.getRandomValues(new Uint8Array(4)))
       .map(x => x.toString(16))
       .join('-');
