@@ -15,6 +15,7 @@
     },
     "packageManager": "npm@11.7.0",
     "scripts": {
+        "test": "turbo run test --filter=!@pm2-logger/client",
         "watch": "turbo run watch",
         "build": "turbo run build",
         "start": "turbo run build && cd server && node --run start --"

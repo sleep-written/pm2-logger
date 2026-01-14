@@ -1,0 +1,59 @@
+variables:
+  GIT_STRATEGY: clone
+  PM2_PROCESS: "@$CI_PROJECT_NAME/server"
+
+stages:
+  - test
+  - deploy
+
+unit_tests_staging:
+  stage:  test
+  tags:   [ staging ]
+  only:   [ staging ]
+  script:
+    - npm ci
+    - node --run test
+
+deploy_webserver_staging:
+  stage:  deploy
+  tags:   [ staging ]
+  only:   [ staging ]
+  needs:  [ unit_tests_staging ]
+  script:
+    - |
+      if pm2 show "$PM2_PROCESS" >/dev/null 2>&1; then
+        echo "[INFO] Removing existing PM2 process"
+        pm2 delete "$PM2_PROCESS"
+      else
+        echo "[INFO] PM2 process not found, nothing to stop"
+      fi
+    - npm ci
+    - node --run build
+    - pm2 start ./server/dist/index.js --name $PM2_PROCESS -- --port 8084
+    - pm2 save
+
+unit_tests_production:
+  stage:  test
+  tags:   [ production ]
+  only:   [ master ]
+  script:
+    - npm ci
+    - node --run test
+
+deploy_webserver_production:
+  stage:  deploy
+  tags:   [ production ]
+  only:   [ master ]
+  needs:  [ unit_tests_production ]
+  script:
+    - |
+      if pm2 show "$PM2_PROCESS" >/dev/null 2>&1; then
+        echo "[INFO] Removing existing PM2 process"
+        pm2 delete "$PM2_PROCESS"
+      else
+        echo "[INFO] PM2 process not found, nothing to stop"
+      fi
+    - npm ci
+    - node --run build
+    - pm2 start ./server/dist/index.js --name $PM2_PROCESS -- --port 8084
+    - pm2 save

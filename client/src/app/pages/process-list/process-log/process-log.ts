@@ -46,20 +46,6 @@ export class ProcessLog implements OnInit, OnDestroy {
     this.socket.dispose();
   }
 
-  onContainerScroll(): void {
-    const container = this.#elementRef
-      .nativeElement
-      .querySelector<HTMLElement>('mat-card-content')!;
-
-    const lastChild = this.#elementRef
-      .nativeElement
-      .querySelector<HTMLElement>('mat-card-content > p:last-child')!;
-
-    if (lastChild) {
-      const scrollBottom = container.scrollHeight - (Math.trunc(container.scrollTop) + container.clientHeight)
-    }
-  }
-
   updateHeartbeat(): void {
     if (typeof this.#heartbeat === 'number') {
       clearTimeout(this.#heartbeat);
@@ -97,16 +83,20 @@ export class ProcessLog implements OnInit, OnDestroy {
       }
 
       // Initialize connection
+      let retries = 0;
       while (this.socket.status !== SocketStatus.OPEN) {
         const url = new URL(document.location.origin);
         url.searchParams.set('process-id', process.id.toString());
         url.pathname = 'pm2/log';
         url.protocol = 'ws:';
 
-        await this.socket
-          .connect(url)
-          .catch(_ => {})
-          .then(_ => {});
+        try {
+          await this.socket.connect(url);
+        } catch {
+          if (retries++ > 3) {
+            await new Promise(r => setTimeout(r, 3000));
+          }
+        }
       }
 
       this.prevProcess = process;
