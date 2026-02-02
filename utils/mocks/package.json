@@ -1,0 +1,21 @@
+{
+    "name": "@utils/mocks",
+    "type": "module",
+    "private": true,
+    "exports": {
+        ".": {
+            "import": "./dist/index.js",
+            "types": "./dist/index.d.ts"
+        }
+    },
+    "scripts": {
+        "test": "node --import @bleed-believer/cli --test ./**/*.test.ts",
+        "clean": "rm -rf ./dist",
+        "build:tsc": "tsc -p ./tsconfig.build.json",
+        "build:swc": "bleed build --config ./tsconfig.build.json",
+        "build": "node --run clean && node --run build:swc && node --run build:tsc",
+        "watch:tsc": "tsc -w -p ./tsconfig.build.json",
+        "watch:swc": "bleed build --watch",
+        "watch": "node --run clean && node --run watch:swc & node --run watch:tsc"
+    }
+}
