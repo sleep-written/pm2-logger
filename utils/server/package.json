@@ -1,6 +1,7 @@
 {
     "name": "@pm2-logger/utils-server",
     "type": "module",
+    "private": true,
     "exports": {
         ".": {
             "import": "./dist/index.js",
