@@ -1,4 +1,4 @@
-import type { PM2Process, PM2LogObject } from '@pm2-logger/utils-pm2';
+import type { PM2Process, PM2LogObject } from '@utils/pm2';
 
 export interface PM2Object {
     list(): PM2Process[];

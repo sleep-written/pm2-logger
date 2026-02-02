@@ -1,4 +1,4 @@
-import { Socket } from '@pm2-logger/utils-socket-server';
+import { Socket } from '@utils/socket-server';
 
 import { LogEvent } from './log.event.js';
 

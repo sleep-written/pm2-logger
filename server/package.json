@@ -3,9 +3,9 @@
     "type": "module",
     "dependencies": {
         "@bleed-believer/espresso": "^0.0.2-alpha.0",
-        "@pm2-logger/utils-pm2": "*",
-        "@pm2-logger/utils-server": "*",
-        "@pm2-logger/utils-socket-server": "*",
+        "@utils/pm2": "*",
+        "@utils/server": "*",
+        "@utils/socket-server": "*",
         "express": "^5.2.1",
         "mime": "^4.1.0",
         "ws": "^8.18.3"

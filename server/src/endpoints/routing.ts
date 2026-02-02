@@ -1,4 +1,4 @@
-import { Server } from '@pm2-logger/utils-server';
+import { Server } from '@utils/server';
 
 import { apiRouting } from './api/routing.js';
 import { AngularController } from './angular.controller.js';

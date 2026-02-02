@@ -1,5 +1,5 @@
 {
-    "name": "@pm2-logger/utils-pm2",
+    "name": "@utils/pm2",
     "type": "module",
     "private": true,
     "exports": {

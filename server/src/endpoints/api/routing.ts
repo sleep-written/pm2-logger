@@ -1,4 +1,4 @@
-import { Server } from '@pm2-logger/utils-server';
+import { Server } from '@utils/server';
 
 import { pm2Routing } from './pm2/routing.js';
 

@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 
 import { resolve } from 'path';
-import { Server } from '@pm2-logger/utils-server';
+import { Server } from '@utils/server';
 import { stat } from 'fs/promises';
 
 export class AngularController {

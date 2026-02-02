@@ -1,7 +1,7 @@
 import type { Request, Response } from 'express';
 
-import { Server } from '@pm2-logger/utils-server';
-import { PM2 } from '@pm2-logger/utils-pm2';
+import { Server } from '@utils/server';
+import { PM2 } from '@utils/pm2';
 
 export class GetController {
     #pm2 = Server.inject(PM2);

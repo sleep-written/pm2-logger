@@ -1,4 +1,4 @@
-import type { PM2Process, PM2LogObject } from '@pm2-logger/utils-pm2';
+import type { PM2Process, PM2LogObject } from '@utils/pm2';
 import type { PM2Object } from './pm2.object.js';
 
 export class PM2Mock implements PM2Object {

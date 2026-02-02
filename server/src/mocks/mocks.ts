@@ -1,8 +1,8 @@
 import { styleText } from 'node:util';
-import { Server } from '@pm2-logger/utils-server';
+import { Server } from '@utils/server';
 
 import { PM2Mock, type PM2Object } from './pm2/index.js';
-import { PM2 } from '@pm2-logger/utils-pm2';
+import { PM2 } from '@utils/pm2';
 
 export class Mocks {
     #callbacks: Record<string, () => void> = {

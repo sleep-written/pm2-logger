@@ -1,10 +1,10 @@
-import type { SocketController, SocketControllerContext } from '@pm2-logger/utils-socket-server';
+import type { SocketController, SocketControllerContext } from '@utils/socket-server';
 import type { LogEventMessage } from './log.event.message.js';
 import type WebSocket from 'ws';
 
-import { Socket } from '@pm2-logger/utils-socket-server';
-import { Server } from '@pm2-logger/utils-server';
-import { PM2 } from '@pm2-logger/utils-pm2';
+import { Socket } from '@utils/socket-server';
+import { Server } from '@utils/server';
+import { PM2 } from '@utils/pm2';
 
 @Socket.event({ path: '/pm2/log' })
 export class LogEvent implements SocketController {

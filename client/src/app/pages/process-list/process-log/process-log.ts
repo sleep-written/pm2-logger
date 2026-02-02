@@ -1,5 +1,5 @@
 import { Component, effect, ElementRef, inject, input, model, OnDestroy, OnInit, signal } from '@angular/core';
-import { Socket, SocketMessageEvent, SocketStatus } from '@pm2-logger/utils-socket-client';
+import { Socket, SocketMessageEvent, SocketStatus } from '@utils/socket-client';
 
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
